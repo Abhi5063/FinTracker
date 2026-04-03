@@ -90,10 +90,11 @@ export default function SuggestionCard({ suggestion, onDismiss }: SuggestionCard
   const handleDismiss = () => {
     // Persist to localStorage so it's gone on next mount too
     try {
-      const stored = JSON.parse(localStorage.getItem('fintrack_dismissed_suggestions') ?? '[]');
+      const stored: string[] = JSON.parse(localStorage.getItem('fintrack_dismissed_suggestions') ?? '[]');
+      if (!stored.includes(id)) stored.push(id);
       localStorage.setItem(
         'fintrack_dismissed_suggestions',
-        JSON.stringify([...new Set([...stored, id])]),
+        JSON.stringify(stored),
       );
     } catch {}
 
@@ -178,10 +179,8 @@ export default function SuggestionCard({ suggestion, onDismiss }: SuggestionCard
  */
 export function filterDismissedSuggestions(suggestions: SpendingSuggestion[]): SpendingSuggestion[] {
   try {
-    const dismissed = new Set<string>(
-      JSON.parse(localStorage.getItem('fintrack_dismissed_suggestions') ?? '[]'),
-    );
-    return suggestions.filter(s => !dismissed.has(getSuggestionId(s)));
+    const dismissed: string[] = JSON.parse(localStorage.getItem('fintrack_dismissed_suggestions') ?? '[]');
+    return suggestions.filter(s => !dismissed.includes(getSuggestionId(s)));
   } catch {
     return suggestions;
   }
