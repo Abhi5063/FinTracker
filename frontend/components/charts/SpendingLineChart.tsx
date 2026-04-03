@@ -18,7 +18,7 @@
 
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Area, defs, linearGradient, stop,
+  Tooltip, ResponsiveContainer, Area,
 } from 'recharts';
 import { format, parseISO }  from 'date-fns';
 import { formatCurrency }    from '@/lib/utils';
