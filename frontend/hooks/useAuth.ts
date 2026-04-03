@@ -98,7 +98,7 @@ export function useAuth(): UseAuthReturn {
       setStoredUser(res.data.user);
       setUser(res.data.user);
 
-      toast.success(`Welcome back, ${res.data.user.name.split(' ')[0]}! 👋`);
+      toast.success(`Welcome back, ${res.data.user.name?.split(' ')[0] || 'User'}! 👋`);
       router.push('/dashboard');
 
     } catch (err: unknown) {
@@ -150,7 +150,7 @@ export function useAuth(): UseAuthReturn {
       setStoredUser(res.data.user);
       setUser(res.data.user);
 
-      toast.success(`Account created! Welcome to FinTrack, ${res.data.user.name.split(' ')[0]}! 🎉`);
+      toast.success(`Account created! Welcome to FinTrack, ${res.data.user.name?.split(' ')[0] || 'User'}! 🎉`);
       router.push('/dashboard');
 
     } catch (err: unknown) {
