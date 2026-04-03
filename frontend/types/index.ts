@@ -191,6 +191,6 @@ export interface NavItem {
   label: string;
   href: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: ComponentType<{ size?: number; className?: string; [key: string]: any }>;
+  icon: ComponentType<{ size?: number | string; className?: string; [key: string]: any }>;
   badge?: number;   // Optional notification/count badge shown next to the label
 }

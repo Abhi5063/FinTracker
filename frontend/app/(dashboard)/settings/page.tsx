@@ -35,7 +35,7 @@ function SettingsSection({
   title, icon: Icon, children,
 }: {
   title: string;
-  icon: React.ComponentType<{ size?: number }>;
+  icon: React.ComponentType<{ size?: number | string }>;
   children: React.ReactNode;
 }) {
   return (
