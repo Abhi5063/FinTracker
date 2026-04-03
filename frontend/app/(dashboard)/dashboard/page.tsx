@@ -237,9 +237,9 @@ export default function DashboardPage() {
                       {s.category}
                     </p>
                     <p style={{ color: 'var(--text-primary)' }}>{s.message}</p>
-                    {s.potentialSaving > 0 && (
+                    {s.potential_savings > 0 && (
                       <p className="mt-1" style={{ color: 'var(--text-muted)' }}>
-                        Potential saving: ₹{s.potentialSaving.toLocaleString()}
+                        Potential saving: ₹{s.potential_savings.toLocaleString()}
                       </p>
                     )}
                   </li>
