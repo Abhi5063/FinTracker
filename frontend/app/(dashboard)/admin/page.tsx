@@ -49,7 +49,7 @@ interface PlatformStats {
 function AdminStatCard({
   icon: Icon, title, value, subtitle, color,
 }: {
-  icon: React.ComponentType<{ size?: number }>;
+  icon: React.ComponentType<{ size?: number | string }>;
   title: string;
   value: string | number;
   subtitle?: string;
@@ -80,7 +80,8 @@ function AdminStatCard({
 
 export default function AdminPage() {
   const router            = useRouter();
-  const { user, isLoaded } = useAuth();
+  const { user, isLoading } = useAuth();
+  const isLoaded = !isLoading;
 
   const [reports,        setReports]        = useState<AdminReport[]>([]);
   const [platformStats,  setPlatformStats]  = useState<PlatformStats | null>(null);
