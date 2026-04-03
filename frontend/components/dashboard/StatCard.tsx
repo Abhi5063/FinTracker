@@ -78,7 +78,7 @@ interface StatCardProps {
   suffix?:    string;
   subtitle?:  string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon:       React.ComponentType<{ size?: number; className?: string; style?: any }>;
+  icon:       React.ComponentType<{ size?: number | string; className?: string; style?: any }>;
   iconBg?:    string;  // CSS colour for icon background
   trend?:     number;  // Percentage change (positive = up)
   trendType?: 'up' | 'down';
