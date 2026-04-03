@@ -1,0 +1,339 @@
+/**
+ * @file globals.css
+ * @description Global stylesheet for FinTrack.
+ *   - CSS custom properties for both dark ("Modern Finance Dark") and light themes
+ *   - Custom scrollbar, base reset, typography
+ *   - Animation keyframes: fadeInUp, countUp, pulseGlow, progressFill, gradientShift
+ *   - Utility classes: .card, .glass, .badge, .spinner, .budget-progress-bar
+ *   - Floating label input pattern
+ * Connected to: frontend/app/layout.tsx, tailwind.config.ts
+ * Owner: Frontend Developer
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────────────────
+   CSS VARIABLES — DARK THEME (default)
+───────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-primary:   #0F172A; /* Slate-900 — page bg */
+  --bg-secondary: #1E293B; /* Slate-800 — card bg */
+  --bg-tertiary:  #273548; /* Slightly lighter — input bg, hover */
+
+  /* Brand */
+  --color-primary: #6366F1; /* Indigo-500 */
+  --color-accent:  #10B981; /* Emerald-500 — positive / income */
+  --color-danger:  #EF4444; /* Red-500 — over-budget */
+  --color-warning: #F59E0B; /* Amber-500 — near limit */
+
+  /* Text */
+  --text-primary: #F1F5F9; /* Slate-100 */
+  --text-muted:   #94A3B8; /* Slate-400 */
+  --text-inverse: #0F172A; /* For dark-text on light buttons */
+
+  /* Borders */
+  --border-glow:  rgba(99, 102, 241, 0.2);
+  --border-solid: rgba(255, 255, 255, 0.08);
+
+  /* Shadows */
+  --shadow-card: 0 0 20px rgba(99, 102, 241, 0.15);
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.28);
+
+  /* Sidebar dimensions */
+  --sidebar-w: 240px;
+  --sidebar-w-collapsed: 72px;
+
+  /* Transitions */
+  --tr-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --tr-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─────────────────────────────────────────────────────────
+   CSS VARIABLES — LIGHT THEME
+   Applied when <html class="light"> (next-themes)
+───────────────────────────────────────────────────────── */
+.light {
+  --bg-primary:   #F8FAFC;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary:  #F1F5F9;
+
+  --color-primary: #4F46E5;
+  --color-accent:  #059669;
+  --color-danger:  #DC2626;
+  --color-warning: #D97706;
+
+  --text-primary: #0F172A;
+  --text-muted:   #475569;
+  --text-inverse: #FFFFFF;
+
+  --border-glow:  rgba(79, 70, 229, 0.15);
+  --border-solid: rgba(0, 0, 0, 0.08);
+
+  --shadow-card: 0 0 20px rgba(79, 70, 229, 0.10);
+  --shadow-glow: 0 0 40px rgba(79, 70, 229, 0.20);
+}
+
+/* ─────────────────────────────────────────────────────────
+   BASE RESET + TYPOGRAPHY
+───────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: background-color var(--tr-slow), color var(--tr-base);
+}
+
+/* ─────────────────────────────────────────────────────────
+   CUSTOM SCROLLBAR
+───────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb  { background: var(--color-primary); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #818CF8; }
+
+/* ─────────────────────────────────────────────────────────
+   SELECTION + FOCUS
+───────────────────────────────────────────────────────── */
+::selection    { background: rgba(99,102,241,0.3); color: var(--text-primary); }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: 4px; }
+
+/* ─────────────────────────────────────────────────────────
+   KEYFRAME ANIMATIONS
+───────────────────────────────────────────────────────── */
+
+/* Page elements fade up on load */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stat card number counting animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Soft pulsing glow on active/highlighted cards */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(99,102,241,0.15); }
+  50%       { box-shadow: 0 0 42px rgba(99,102,241,0.38); }
+}
+
+/* Budget bar fills from 0 to --progress-value on mount */
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: var(--progress-value, 0%); }
+}
+
+/* Auth page right-panel animated gradient */
+@keyframes gradientShift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* Spinner for loading states */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Mobile sidebar slide in */
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+/* ─────────────────────────────────────────────────────────
+   ANIMATION UTILITY CLASSES
+───────────────────────────────────────────────────────── */
+.animate-fade-in-up    { animation: fadeInUp    0.45s ease forwards; }
+.animate-count-up      { animation: countUp     0.5s  ease forwards; }
+.animate-pulse-glow    { animation: pulseGlow   3s ease-in-out infinite; }
+.animate-slide-in-left { animation: slideInLeft 0.3s ease forwards; }
+.animate-spin-btn      { animation: spin 0.75s linear infinite; }
+
+/* Staggered children: each child fades in 50 ms apart */
+.stagger > * { opacity: 0; }
+.stagger.loaded > *:nth-child(1) { animation: fadeInUp 0.4s 0.05s ease forwards; }
+.stagger.loaded > *:nth-child(2) { animation: fadeInUp 0.4s 0.10s ease forwards; }
+.stagger.loaded > *:nth-child(3) { animation: fadeInUp 0.4s 0.15s ease forwards; }
+.stagger.loaded > *:nth-child(4) { animation: fadeInUp 0.4s 0.20s ease forwards; }
+.stagger.loaded > *:nth-child(5) { animation: fadeInUp 0.4s 0.25s ease forwards; }
+.stagger.loaded > *:nth-child(6) { animation: fadeInUp 0.4s 0.30s ease forwards; }
+
+/* ─────────────────────────────────────────────────────────
+   CARD + GLASS
+───────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--tr-base), border-color var(--tr-base);
+}
+.card:hover {
+  box-shadow: var(--shadow-glow);
+  border-color: rgba(99,102,241,0.4);
+}
+
+.glass {
+  background: rgba(30, 41, 59, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glow);
+}
+.light .glass { background: rgba(255,255,255,0.72); }
+
+/* ─────────────────────────────────────────────────────────
+   GRADIENTS
+───────────────────────────────────────────────────────── */
+.gradient-primary { background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); }
+.gradient-accent  { background: linear-gradient(135deg, #10B981 0%, #06B6D4 100%); }
+.gradient-danger  { background: linear-gradient(135deg, #EF4444 0%, #F97316 100%); }
+
+/* Animated gradient — auth page right panel */
+.gradient-auth {
+  background: linear-gradient(-45deg, #0F172A, #1e1b4b, #0c2340, #0F172A);
+  background-size: 400% 400%;
+  animation: gradientShift 10s ease infinite;
+}
+
+/* ─────────────────────────────────────────────────────────
+   BUDGET PROGRESS BAR
+───────────────────────────────────────────────────────── */
+.progress-track {
+  background: var(--bg-tertiary);
+  border-radius: 100px;
+  height: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+.progress-bar {
+  border-radius: 100px;
+  height: 100%;
+  width: var(--progress-value, 0%);
+  animation: progressFill 0.85s cubic-bezier(0.4,0,0.2,1) forwards;
+  transition: background 0.4s ease;
+}
+/* Color transitions: green → yellow → red based on usage */
+.progress-bar.safe    { background: linear-gradient(90deg, #10B981, #34D399); }
+.progress-bar.warning { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+.progress-bar.danger  { background: linear-gradient(90deg, #EF4444, #F97316); }
+
+/* ─────────────────────────────────────────────────────────
+   BADGES
+───────────────────────────────────────────────────────── */
+.badge {
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.55rem;
+}
+.badge-primary { background: rgba(99,102,241,0.15); color: #818CF8; }
+.badge-success { background: rgba(16,185,129,0.15); color: #34D399; }
+.badge-danger  { background: rgba(239,68,68,0.15);  color: #F87171; }
+.badge-warning { background: rgba(245,158,11,0.15); color: #FCD34D; }
+
+/* ─────────────────────────────────────────────────────────
+   SPINNER
+───────────────────────────────────────────────────────── */
+.spinner {
+  border: 2px solid rgba(255,255,255,0.15);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  display: inline-block;
+  height: 1.2rem;
+  width: 1.2rem;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ─────────────────────────────────────────────────────────
+   FLOATING LABEL INPUTS
+───────────────────────────────────────────────────────── */
+.float-wrapper { position: relative; }
+
+.float-wrapper input,
+.float-wrapper select {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-solid);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  padding: 1.25rem 1rem 0.5rem;
+  width: 100%;
+  transition: border-color var(--tr-base), box-shadow var(--tr-base);
+}
+.float-wrapper input:focus,
+.float-wrapper select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.22);
+  outline: none;
+}
+.float-label {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  left: 1rem;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all var(--tr-base);
+}
+/* Floats up when focused or has value */
+.float-wrapper input:focus     ~ .float-label,
+.float-wrapper input:not(:placeholder-shown) ~ .float-label {
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  top: 0.65rem;
+  transform: none;
+}
+
+/* ─────────────────────────────────────────────────────────
+   NOTIFICATION BADGE (bell icon)
+───────────────────────────────────────────────────────── */
+.notif-badge {
+  background: var(--color-danger);
+  border: 2px solid var(--bg-secondary);
+  border-radius: 50%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  height: 17px;
+  min-width: 17px;
+  padding: 0 2px;
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+/* ─────────────────────────────────────────────────────────
+   KEYBOARD SHORTCUT HINT
+───────────────────────────────────────────────────────── */
+.kbd {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-solid);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  padding: 0.1rem 0.35rem;
+}
