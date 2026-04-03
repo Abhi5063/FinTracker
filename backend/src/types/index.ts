@@ -21,7 +21,7 @@ export interface ApiResponse<T = unknown> {
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 /** Extends Express Request to include authenticated user */
-export interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Omit<Request, 'user'> {
   user?: IUser;
 }
 
