@@ -10,6 +10,7 @@
 import Sidebar from '@/components/layout/Sidebar';
 import Navbar  from '@/components/layout/Navbar';
 import AuthGuard from '@/components/layout/AuthGuard';
+import GlobalAddExpense from '@/components/expenses/GlobalAddExpense';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -41,6 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </main>
         </div>
       </div>
+      <GlobalAddExpense />
     </AuthGuard>
   );
 }

@@ -23,7 +23,6 @@ import {
 import { format, parseISO }                from 'date-fns';
 import { toast }                           from 'sonner';
 import { useExpenses, Expense, ExpenseCategory, PaymentMethod } from '@/hooks/useExpenses';
-import AddExpenseModal                     from '@/components/expenses/AddExpenseModal';
 import { cn, formatCurrency }             from '@/lib/utils';
 
 // ─── Category badge colours ───────────────────────────────────────────────────
@@ -55,17 +54,8 @@ export default function ExpensesPage() {
   } = useExpenses();
 
   /* ── Local UI state ─────────────────────────────────────────── */
-  const [modalOpen,    setModalOpen]    = useState(false);
-  const [editExpense,  setEditExpense]  = useState<Expense | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Expense | null>(null);
   const [searchInput,  setSearchInput]  = useState('');
-
-  /* ── Keyboard shortcut 'N' → open Add Expense modal ─────────── */
-  useEffect(() => {
-    const handler = () => { setEditExpense(null); setModalOpen(true); };
-    window.addEventListener('fintrack:open-add-expense', handler);
-    return () => window.removeEventListener('fintrack:open-add-expense', handler);
-  }, []);
 
   /* ── Debounced search: update filter 300ms after last keystroke ─ */
   useEffect(() => {
@@ -82,8 +72,7 @@ export default function ExpensesPage() {
 
   /* ── Open edit modal ────────────────────────────────────────── */
   const handleEdit = (expense: Expense) => {
-    setEditExpense(expense);
-    setModalOpen(true);
+    window.dispatchEvent(new CustomEvent('fintrack:open-add-expense', { detail: { expense } }));
   };
 
   return (
@@ -112,7 +101,7 @@ export default function ExpensesPage() {
           {/* Add Expense */}
           <button
             id="add-expense-btn"
-            onClick={() => { setEditExpense(null); setModalOpen(true); }}
+            onClick={() => window.dispatchEvent(new CustomEvent('fintrack:open-add-expense'))}
             className="gradient-primary flex items-center gap-2 rounded-input px-4 py-2 text-sm font-semibold text-white shadow-glow transition-all duration-200 hover:scale-[1.02]"
           >
             <Plus size={15} /> Add Expense
@@ -341,12 +330,6 @@ export default function ExpensesPage() {
         )}
       </div>
 
-      {/* ── Add/Edit Modal ──────────────────────────────────────── */}
-      <AddExpenseModal
-        isOpen={modalOpen}
-        onClose={() => { setModalOpen(false); setEditExpense(null); }}
-        expenseToEdit={editExpense}
-      />
 
       {/* ── Delete Confirm Dialog ────────────────────────────────── */}
       {deleteTarget && (
