@@ -43,7 +43,20 @@ app.use(helmet());
  */
 app.use(
   cors({
-    origin:      process.env.CORS_ORIGIN ?? 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      // Allow localhost for dev, and allow any *.onrender.com frontend out of the box
+      if (
+        !origin || 
+        origin.includes('localhost') || 
+        origin.includes('onrender.com') ||
+        origin === process.env.CORS_ORIGIN
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true, // Allow cookies/auth headers
     methods:     ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
