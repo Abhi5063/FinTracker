@@ -87,7 +87,18 @@ app.use(express.json({ limit: '10kb' }));
 /** Parse URL-encoded form data */
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-// ─── Health Check ─────────────────────────────────────────────────────────────
+// ─── Health Check & Root ──────────────────────────────────────────────────────
+/**
+ * GET / — Friendly welcome message for users hitting the API root in a browser.
+ */
+app.get('/', (_req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    data:    null,
+    message: 'Welcome to the FinTrack API 👋. Please use the frontend application to interact with this service.',
+  });
+});
+
 /**
  * GET /health — simple liveness probe for deployment platforms (Render, Railway).
  */
